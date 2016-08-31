@@ -1,5 +1,9 @@
+import java.io.File
+import java.nio.file.{Files, Paths}
+
 import com.trueaccord.scalapb.{ScalaPbPlugin => PB}
 import DebianConstants._
+import com.typesafe.sbt.packager.Keys._
 
 name := "testTravisBuild"
 
@@ -19,6 +23,7 @@ libraryDependencies ++= Seq(
   "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % (PB.scalapbVersion in PB.protobufConfig).value % PB.protobufConfig,
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
+
 
 // PB Configs
 
@@ -69,7 +74,7 @@ scriptClasspath := Seq( (assemblyJarName in assembly).value )
 enablePlugins(DebianPlugin)
 
 maintainer := "Max Smith <max.smith@yourcompany.io>"
-
+packageArchitecture in Debian := "amd64"
 packageSummary := "Hello World Debian Package"
 
 packageDescription := """A fun package description of our software,

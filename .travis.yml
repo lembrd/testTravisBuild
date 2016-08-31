@@ -5,6 +5,10 @@ jdk:
   - oraclejdk8
 script:
   - sbt -jvm-opts travis/jvmopts.compile debian:packageBin
+before_cache:
+  # Tricks to avoid unnecessary cache updates
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete
 cache:
   directories:
   - $HOME/.ivy2
@@ -20,8 +24,5 @@ addons:
     - lintian
     - fakeroot
 
-deploy:
-  provider: bintray
-  file: "travis/bintray.descriptor"
-  user: "lembrd"
-  key: "d2d213d73e1db5c6120a2cc4aedb7180b3f3ccd9"
+after_success:
+  "curl -F package=target/testTravisBuild*.deb https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
