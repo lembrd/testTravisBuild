@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "scalapb/scalapb.proto";
+
+package org.lembrd.test;
+
+message TestMessage {
+    int64 workflowId    = 1;
+    int32 priority      = 2;
+    bool direct         = 3;
+    bool recursive      = 4;
+    string sinkUrl      = 5;
+    string scriptId     = 6;
+}
