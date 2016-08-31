@@ -10,3 +10,12 @@ cache:
   - $HOME/.ivy2
   - $HOME/.m2
   - $HOME/.sbt
+
+addons:
+  apt:
+    packages:
+    - dpkg-deb
+    - dpkg-sig
+    - dpkg-genchanges
+    - lintian
+    - fakeroot
