@@ -1,9 +1,4 @@
-import java.io.File
-import java.nio.file.{Files, Paths}
-
 import com.trueaccord.scalapb.{ScalaPbPlugin => PB}
-import DebianConstants._
-import com.typesafe.sbt.packager.Keys._
 
 name := "testTravisBuild"
 
