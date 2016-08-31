@@ -25,4 +25,4 @@ addons:
     - fakeroot
 
 after_success:
-  "curl -F package=target/testTravisBuild*.deb https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
+  "curl -F package=target/testTravisBuild_1.0_amd64.deb https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
