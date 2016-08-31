@@ -13,7 +13,6 @@ scalacOptions += "-Ywarn-unused"
 
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
-
 libraryDependencies ++= Seq(
   "com.github.os72" % "protoc-jar" % "3.0.0-b2.1",
   "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % (PB.scalapbVersion in PB.protobufConfig).value,

@@ -4,7 +4,7 @@ scala:
 jdk:
   - oraclejdk8
 script:
-  - sbt -jvm-opts travis/jvmopts.compile compile test
+  - sbt -jvm-opts travis/jvmopts.compile debian:packageBin
 cache:
   directories:
   - $HOME/.ivy2
@@ -19,3 +19,9 @@ addons:
     - dpkg-genchanges
     - lintian
     - fakeroot
+
+deploy:
+  provider: bintray
+  file: "travis/bintray.descriptor"
+  user: "lembrd"
+  key: "d2d213d73e1db5c6120a2cc4aedb7180b3f3ccd9"
