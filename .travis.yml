@@ -9,3 +9,4 @@ cache:
   directories:
   - $HOME/.ivy2
   - $HOME/.m2
+  - $HOME/.sbt
