@@ -4,4 +4,8 @@ scala:
 jdk:
   - oraclejdk8
 script:
-  - sbt -jvm-opts travis/jvmopts.compile compile
+  - sbt -jvm-opts travis/jvmopts.compile compile test
+cache:
+  directories:
+  - $HOME/.ivy2
+  - $HOME/.m2
