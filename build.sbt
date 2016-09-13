@@ -54,8 +54,8 @@ packageDeb <<= (finalFullName, name in Debian, version in Debian, buildBranch, p
 
   val finalFile = pp.getCanonicalPath
   Files.write( Paths.get("target", ".deboutput"), finalFile.getBytes("UTF-8") )
-  Files.write( Paths.get("target", ".debname"), finalFile.getBytes("UTF-8") )
-  Files.write( Paths.get("target", ".debversion"), finalFile.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debname"), n1.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debversion"), v1.getBytes("UTF-8") )
   Files.write( Paths.get("target", ".debdist"), distr.getBytes("UTF-8") )
   Files.write( Paths.get("target", ".debfinaldebname"), pp.getName.getBytes("UTF-8") )
   finalFile
