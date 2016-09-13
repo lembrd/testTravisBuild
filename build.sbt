@@ -45,9 +45,19 @@ finalFullName <<= (finalName, finalVersion) apply (_ + "-" + _)
 name in Debian := finalName.value
 version in Debian := finalVersion.value
 
-packageDeb <<= (finalFullName, packageBin in Debian) map {(mm, pp) =>
+packageDeb <<= (finalFullName, name in Debian, version in Debian, buildBranch, packageBin in Debian) map {(mm, n1, v1, bb, pp) =>
+  val distr = bb match {
+    case Some(br) if br.contains("hotfix") || br.contains("master") || br.contains("hotfix") => "main"
+    case Some(br) if br.startsWith("develop") => "dev"
+    case _ => "experimental"
+  }
+
   val finalFile = pp.getCanonicalPath
   Files.write( Paths.get("target", ".deboutput"), finalFile.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debname"), finalFile.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debversion"), finalFile.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debdist"), distr.getBytes("UTF-8") )
+  Files.write( Paths.get("target", ".debfinaldebname"), pp.getName.getBytes("UTF-8") )
   finalFile
 }
 

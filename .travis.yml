@@ -26,5 +26,12 @@ addons:
 
 after_success:
   - FINAL_DEB=$(cat "target/.deboutput")
-  - "curl -F package=@$FINAL_DEB https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
+  - DEB_NAME=$(cat "target/.debname")
+  - DEV_VERSION=$(cat "target/.debversion")
+  - DEB_FINALDEBNAME=$(cat "target/.debdist")
+  - DEB_DISTR=$(cat "target/.debfinaldebname")
+# BinTray Version:
+  - curl -T @$FINAL_DEB -ulembrd:d2d213d73e1db5c6120a2cc4aedb7180b3f3ccd9 https://api.bintray.com/content/lembrd/lembrddebtest/$DEB_NAME/$DEV_VERSION/$DEB_FINALDEBNAME;deb_distribution=$DEB_DISTR;deb_component=main;deb_architecture=all
+# GemFury version
+#  - "curl -F package=@$FINAL_DEB https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
 
