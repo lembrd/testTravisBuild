@@ -28,6 +28,7 @@ val buildNumber = settingKey[Option[String]]("Build number")
 val finalVersion = settingKey[String]("Output version")
 val finalName = settingKey[String]("Output name")
 val finalFullName = settingKey[String]("Output full name with version")
+val debDistr = settingKey[String]("Debian distribution")
 
 buildBranch := Option(System.getenv("TRAVIS_BRANCH"))
 buildNumber := Option(System.getenv("TRAVIS_BUILD_NUMBER"))
@@ -41,16 +42,18 @@ finalName <<= (name, buildBranch) apply ((n, b) => {
 })
 
 finalFullName <<= (finalName, finalVersion) apply (_ + "-" + _)
-
-name in Debian := finalName.value
-version in Debian := finalVersion.value
-
-packageDeb <<= (finalFullName, name in Debian, version in Debian, buildBranch, packageBin in Debian) map {(mm, n1, v1, bb, pp) =>
-  val distr = bb match {
+debDistr <<= (buildBranch) apply ( (bb) => {
+  bb match {
     case Some(br) if br.contains("hotfix") || br.contains("master") || br.contains("hotfix") => "main"
     case Some(br) if br.startsWith("develop") => "dev"
     case _ => "experimental"
   }
+})
+
+name in Debian := finalName.value.toLowerCase
+version in Debian := finalVersion.value
+
+packageDeb <<= (finalFullName, name in Debian, version in Debian, buildBranch, debDistr, packageBin in Debian) map {(mm, n1, v1, bb, distr, pp) =>
 
   val finalFile = pp.getCanonicalPath
   Files.write( Paths.get("target", ".deboutput"), finalFile.getBytes("UTF-8") )
@@ -112,6 +115,6 @@ enablePlugins(DebianPlugin)
 maintainer := "Max Smith <max.smith@yourcompany.io>"
 packageArchitecture in Debian := "amd64"
 packageSummary := "Hello World Debian Package"
-debianSection := "unstable/web"
+debianSection := "main/web"
 packageDescription := """A fun package description of our software,
   with multiple lines."""
