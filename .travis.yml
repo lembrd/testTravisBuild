@@ -4,7 +4,7 @@ scala:
 jdk:
   - oraclejdk8
 script:
-  - sbt -jvm-opts travis/jvmopts.compile debian:packageBin
+  - sbt -jvm-opts travis/jvmopts.compile packageDeb
 before_cache:
   # Tricks to avoid unnecessary cache updates
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
@@ -25,4 +25,6 @@ addons:
     - fakeroot
 
 after_success:
-  "curl -F package=@target/testTravisBuild*.deb https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
+  - FINAL_DEB=$(cat "target/.deboutput")
+  - "curl -F package=@$FINAL_DEB https://iyNkjR2UTrKHmbZPzPxB@push.fury.io/lembrd/"
+

@@ -1,3 +1,5 @@
+import java.nio.file.{Files, Paths}
+
 import com.trueaccord.scalapb.{ScalaPbPlugin => PB}
 
 name := "testTravisBuild"
@@ -19,6 +21,35 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
+val packageDeb = taskKey[String]("Package DEB and do all needed preparations for deployment")
+
+val buildBranch = settingKey[Option[String]]("Build branch")
+val buildNumber = settingKey[Option[String]]("Build number")
+val finalVersion = settingKey[String]("Output version")
+val finalName = settingKey[String]("Output name")
+val finalFullName = settingKey[String]("Output full name with version")
+
+buildBranch := Option(System.getenv("TRAVIS_BRANCH"))
+buildNumber := Option(System.getenv("TRAVIS_BUILD_NUMBER"))
+
+finalVersion <<= (version, buildNumber) apply ((bv, bn) => bn.map(bv + "." + _).getOrElse(bv + "-SNAPSHOT"))
+
+finalName <<= (name, buildBranch) apply ((n, b) => {
+  b.filterNot(br =>
+    br.contains("hotfix") || br.contains("master") || br.contains("hotfix")
+  ).map(br => n + "-" + br.replace("/","-")).getOrElse(n)
+})
+
+finalFullName <<= (finalName, finalVersion) apply (_ + "-" + _)
+
+name in Debian := finalName.value
+version in Debian := finalVersion.value
+
+packageDeb <<= (finalFullName, packageBin in Debian) map {(mm, pp) =>
+  val finalFile = pp.getCanonicalPath
+  Files.write( Paths.get("target", ".deboutput"), finalFile.getBytes("UTF-8") )
+  finalFile
+}
 
 // PB Configs
 
@@ -71,6 +102,6 @@ enablePlugins(DebianPlugin)
 maintainer := "Max Smith <max.smith@yourcompany.io>"
 packageArchitecture in Debian := "amd64"
 packageSummary := "Hello World Debian Package"
-
+debianSection := "unstable/web"
 packageDescription := """A fun package description of our software,
   with multiple lines."""
